@@ -23,10 +23,9 @@ RSpec.describe Task do
       next_sub_tasks = sb.sub_tasks.values
       next_synced_sub_tasks = sb.sub_tasks_synced.values
 
-      next_sub_tasks.each do |nxt_sb|
-        assert_requested :get, "#{ENV['TASK_SERVER_URL']}/tasks/#{nxt_sb}/"
+      next_sub_tasks.each do |next_sb|
+        assert_requested :get, "#{ENV['TASK_SERVER_URL']}/tasks/#{next_sb}/"
       end
-
       next_synced_sub_tasks.each do |nxt_sb|
         expect(nxt_sb.class).to be Task
       end
@@ -41,10 +40,12 @@ RSpec.describe Task do
 
     synced_inputs = task.inputs_synced.values
 
+    # should retrieve inputs - but not inputs' sub_tasks
     synced_inputs.each do |sb|
       assert_requested :get, "#{ENV['TASK_SERVER_URL']}/tasks/#{sb.id}/"
-      assert_not_requested :get,
-        "#{ENV['TASK_SERVER_URL']}/tasks/#{sb.sub_tasks.first}/"
+      sb.sub_tasks.each do |next_sb|
+        assert_not_requested :get, "#{ENV['TASK_SERVER_URL']}/tasks/#{next_sb}/"
+      end
     end
   end
 end

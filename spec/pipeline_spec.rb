@@ -31,6 +31,7 @@ RSpec.describe PipelineRequest do
       .to_return(status: 500, body: { error: ':(' }.to_json)
 
     expect { PipelineRequest.get(path) }.to raise_error RuntimeError
+    assert_requested :get, "#{ENV['TASK_SERVER_URL']}#{path}"
   end
 
   it 'Bad json raises an exception' do
@@ -40,5 +41,6 @@ RSpec.describe PipelineRequest do
       .to_return(body: 'not json')
 
     expect { PipelineRequest.get(path) }.to raise_error RuntimeError
+    assert_requested :get, "#{ENV['TASK_SERVER_URL']}#{path}"
   end
 end

@@ -8,8 +8,7 @@ RSpec.describe Task do
     assert_requested :get, "#{ENV['TASK_SERVER_URL']}/tasks/#{task_id}/"
   end
   it 'Recursively syncs sub tasks' do
-    next_layer = 3
-    sub_tasks = 5.times.map { task_factory(sub_tasks_count: next_layer) }
+    sub_tasks = 5.times.map { task_factory(sub_tasks_count: 3) }
     task_id = task_factory(sub_tasks: sub_tasks)
 
     task = Task.create task_id
@@ -35,8 +34,7 @@ RSpec.describe Task do
 
   end
   it 'Syncs task inputs to one layer' do
-    next_layer = 3
-    inputs = 4.times.map { task_factory(sub_tasks_count: next_layer) }
+    inputs = 4.times.map { task_factory(sub_tasks_count: 3) }
     task_id = task_factory(inputs: inputs)
 
     task = Task.create task_id
